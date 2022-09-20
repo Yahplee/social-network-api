@@ -37,7 +37,11 @@ const userController = {
 	},
 	async updateUser(req, res) {
 		try {
-			const userData = await User.findOneAndUpdate({ _id: req.params.userId });
+			const userData = await User.findOneAndUpdate(
+				{ _id: req.params.userId },
+				{ $set: req.body },
+				{ runValidators: true, new: true }
+			);
 
 			if (!userData) {
 				return res.status(404).json({ message: "User cannot be found." });
@@ -66,9 +70,9 @@ const userController = {
 			const friendData = await User.findOneAndUpdate(
 				{ _id: req.params.userId },
 				{
-					$addToSet: { friend: req.body },
+					$addToSet: { friends: req.body },
 				},
-				{ new: true }
+				{ runValidators: true, new: true }
 			);
 
 			if (!friendData) {
@@ -80,12 +84,12 @@ const userController = {
 			res.status(400).json(err);
 		}
 	},
-	async deleteFried(req, res) {
+	async deleteFriend(req, res) {
 		try {
-			const friendData = await User.findOneAndDelete(
+			const friendData = await User.findOneAndUpdate(
 				{ _id: req.params.userId },
 				{
-					$pull: { friend: req.params.friendId },
+					$pull: { friends: req.params.friendId },
 				},
 				{ new: true }
 			);
@@ -101,4 +105,4 @@ const userController = {
 	},
 };
 
-modules.exports = userController;
+module.exports = userController;

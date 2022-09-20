@@ -99,7 +99,7 @@ const thoughtController = {
 	},
 	async deleteReaction(req, res) {
 		try {
-			const reactionData = Thought.findOneAndDelete(
+			const reactionData = Thought.findOneAndUpdate(
 				{ _id: req.params.thoughtId },
 				{ $pull: { reactions: req.params.reactionId } }
 			);
